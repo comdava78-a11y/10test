@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Тест по базам данных</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #111827, #1e293b);
+      color: white;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .hero,
+    .card,
+    .result-box,
+    footer {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .hero {
+      padding: 30px;
+      margin-bottom: 25px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.15);
+      color: #a5f3fc;
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 15px;
+      font-size: 40px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #d1d5db;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .progress-box {
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.18);
+      padding: 20px;
+      border-radius: 20px;
+    }
+
+    .progress-label {
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .progress-count {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22d3ee, #3b82f6, #6366f1);
+      transition: width 0.4s ease;
+    }
+
+    .section-title {
+      font-size: 28px;
+      margin: 0 0 10px;
+    }
+
+    .section-text {
+      color: #cbd5e1;
+      margin: 0;
+    }
+
+    .intro {
+      padding: 24px 28px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .question-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .number {
+      min-width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #22d3ee, #2563eb);
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .question-text {
+      font-size: 21px;
+      font-weight: bold;
+      line-height: 1.4;
+    }
+
+    .option {
+      display: block;
+      margin-bottom: 12px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .option:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(34, 211, 238, 0.45);
+    }
+
+    .option input {
+      margin-right: 10px;
+      transform: scale(1.1);
+    }
+
+    .option.correct {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: rgba(74, 222, 128, 0.7);
+    }
+
+    .option.wrong {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: rgba(251, 113, 133, 0.7);
+    }
+
+    .option.selected {
+      border-color: rgba(34, 211, 238, 0.7);
+      background: rgba(34, 211, 238, 0.12);
+    }
+
+    .answer-note {
+      display: block;
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .answer-note.correct-note {
+      color: #86efac;
+    }
+
+    .answer-note.wrong-note {
+      color: #fda4af;
+    }
+
+    .result-box {
+      padding: 28px;
+      margin-top: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .check-btn {
+      background: linear-gradient(90deg, #22d3ee, #2563eb);
+      color: #0f172a;
+    }
+
+    .check-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    .reset-btn {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .reset-btn:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      background: rgba(0,0,0,0.2);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .stat-title {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      padding: 18px;
+      color: #cbd5e1;
+      font-size: 16px;
+    }
+
+    footer span {
+      color: white;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 30px;
+      }
+
+      .question-text {
+        font-size: 18px;
+      }
+
+      .hero,
+      .card,
+      .result-box,
+      .intro {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="badge">Интерактивный тест по базам данных</div>
+      <h1>Внешние ключи, целостность связей, валидация и верификация данных</h1>
+      <div class="subtitle">
+        Красивый учебный сайт с 10 вопросами. Выберите варианты ответов, проверьте результат
+        и посмотрите, какие ответы были верными.
+      </div>
+
+      <div class="progress-box">
+        <div class="progress-label">Прогресс</div>
+        <div class="progress-count"><span id="answeredCount">0</span>/10</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro card">
+      <h2 class="section-title">Тест</h2>
+      <p class="section-text">Отметьте один правильный вариант в каждом вопросе.</p>
+    </section>
+
+    <div id="quiz"></div>
+
+    <section class="result-box">
+      <h2 class="section-title">Итоги</h2>
+      <p class="section-text" id="resultText">Выберите ответы и нажмите «Проверить результат».</p>
+
+      <div class="buttons">
+        <button class="check-btn" onclick="checkAnswers()">Проверить результат</button>
+        <button class="reset-btn" onclick="resetQuiz()">Сбросить</button>
+      </div>
+
+      <div class="stats" id="stats" style="display: none;">
+        <div class="stat">
+          <div class="stat-title">Правильных ответов</div>
+          <div class="stat-value" id="correctCount">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">Неправильных ответов</div>
+          <div class="stat-value" id="wrongCount">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">Процент</div>
+          <div class="stat-value" id="percentCount">0%</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Сделал <span>Русинов Давид 10А</span>
+    </footer>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Что такое внешний ключ в базе данных?",
+        options: [
+          "A. Поле, которое всегда является уникальным",
+          "B. Поле, связанное с первичным ключом другой таблицы",
+          "C. Поле для хранения даты создания записи",
+          "D. Поле, которое нельзя изменять"
+        ],
+        correct: 1
+      },
+      {
+        question: "В примере с таблицами заказов и клиентов идентификатор клиента в таблице «Заказы» является:",
+        options: [
+          "A. Первичным ключом",
+          "B. Индексом",
+          "C. Внешним ключом",
+          "D. Текстовым полем"
+        ],
+        correct: 2
+      },
+      {
+        question: "Что означает нарушение целостности связей?",
+        options: [
+          "A. В таблице слишком много записей",
+          "B. В таблице есть запись, у которой нет связанной записи в другой таблице",
+          "C. В таблице отсутствует первичный ключ",
+          "D. В таблице есть пустые строки"
+        ],
+        correct: 1
+      },
+      {
+        question: "Что делает СУБД при включённой ссылочной целостности, если внешний ключ ссылается на несуществующую запись?",
+        options: [
+          "A. Автоматически создаёт недостающую запись",
+          "B. Игнорирует ошибку",
+          "C. Запрещает ввод или изменение данных",
+          "D. Удаляет всю таблицу"
+        ],
+        correct: 2
+      },
+      {
+        question: "Для чего нужна валидация данных?",
+        options: [
+          "A. Для ускорения печати документов",
+          "B. Для проверки соответствия вводимых данных заданным правилам",
+          "C. Для удаления повторяющихся таблиц",
+          "D. Для создания резервных копий"
+        ],
+        correct: 1
+      },
+      {
+        question: "Какое правило валидации ограничивает ввод значениями из заранее заданного перечня?",
+        options: [
+          "A. Диапазон",
+          "B. Формат",
+          "C. Поиск по списку",
+          "D. Наличие"
+        ],
+        correct: 2
+      },
+      {
+        question: "Какое из приведённых правил относится к типу «Диапазон»?",
+        options: [
+          "A. Имя — IS NOT NULL",
+          "B. Уровень повторного заказа > 0",
+          "C. Пол — «М» или «Ж»",
+          "D. Адрес электронной почты — содержит @"
+        ],
+        correct: 1
+      },
+      {
+        question: "Что означает правило IS NOT NULL?",
+        options: [
+          "A. Значение должно быть числом",
+          "B. Значение должно быть уникальным",
+          "C. Поле не может оставаться пустым",
+          "D. Значение должно быть записано заглавными буквами"
+        ],
+        correct: 2
+      },
+      {
+        question: "Что такое верификация данных?",
+        options: [
+          "A. Удаление лишних столбцов из таблицы",
+          "B. Сравнение введённых данных с исходным источником",
+          "C. Изменение типа данных поля",
+          "D. Автоматическое заполнение записей"
+        ],
+        correct: 1
+      },
+      {
+        question: "Какое правило валидации подходит для поля «Дата рождения», если нужно ограничить допустимые значения?",
+        options: [
+          "A. Поиск по списку",
+          "B. Формат",
+          "C. Диапазон",
+          "D. Наличие"
+        ],
+        correct: 2
+      }
+    ];
+
+    const quizContainer = document.getElementById("quiz");
+
+    function renderQuiz() {
+      quizContainer.innerHTML = "";
+
+      questions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        let optionsHTML = "";
+        q.options.forEach((option, optionIndex) => {
+          optionsHTML += `
+            <label class="option" id="q${index}_o${optionIndex}">
+              <input type="radio" name="question${index}" value="${optionIndex}" onchange="updateProgress()">
+              ${option}
+              <span class="answer-note" id="note_q${index}_o${optionIndex}"></span>
+            </label>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="question-header">
+            <div class="number">${index + 1}</div>
+            <div class="question-text">${q.question}</div>
+          </div>
+          <div>${optionsHTML}</div>
+        `;
+
+        quizContainer.appendChild(card);
+      });
+    }
+
+    function updateProgress() {
+      let answered = 0;
+
+      questions.forEach((_, index) => {
+        const selected = document.querySelector(`input[name="question${index}"]:checked`);
+        if (selected) answered++;
+      });
+
+      document.getElementById("answeredCount").textContent = answered;
+      document.getElementById("progressFill").style.width = (answered / questions.length) * 100 + "%";
+    }
+
+    function checkAnswers() {
+      let score = 0;
+
+      questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="question${index}"]:checked`);
+
+        q.options.forEach((_, optionIndex) => {
+          const optionLabel = document.getElementById(`q${index}_o${optionIndex}`);
+          const note = document.getElementById(`note_q${index}_o${optionIndex}`);
+
+          optionLabel.classList.remove("correct", "wrong", "selected");
+          note.textContent = "";
+          note.className = "answer-note";
+
+          if (selected && Number(selected.value) === optionIndex) {
+            optionLabel.classList.add("selected");
+          }
+
+          if (optionIndex === q.correct) {
+            optionLabel.classList.add("correct");
+            note.textContent = "Верный ответ";
+            note.classList.add("correct-note");
+          }
+
+          if (selected && Number(selected.value) === optionIndex && optionIndex !== q.correct) {
+            optionLabel.classList.add("wrong");
+            note.textContent = "Неверный ответ";
+            note.classList.add("wrong-note");
+          }
+        });
+
+        if (selected && Number(selected.value) === q.correct) {
+          score++;
+        }
+      });
+
+      const wrong = questions.length - score;
+      const percent = Math.round((score / questions.length) * 100);
+
+      document.getElementById("correctCount").textContent = score;
+      document.getElementById("wrongCount").textContent = wrong;
+      document.getElementById("percentCount").textContent = percent + "%";
+      document.getElementById("stats").style.display = "grid";
+
+      let resultText = "Попробуйте ещё раз и улучшите результат.";
+      if (percent === 100) {
+        resultText = "Отлично! Все ответы верные.";
+      } else if (percent >= 80) {
+        resultText = "Очень хороший результат!";
+      } else if (percent >= 60) {
+        resultText = "Хорошо, но есть над чем поработать.";
+      }
+
+      document.getElementById("resultText").textContent = resultText;
+    }
+
+    function resetQuiz() {
+      renderQuiz();
+      document.getElementById("answeredCount").textContent = "0";
+      document.getElementById("progressFill").style.width = "0%";
+      document.getElementById("correctCount").textContent = "0";
+      document.getElementById("wrongCount").textContent = "0";
+      document.getElementById("percentCount").textContent = "0%";
+      document.getElementById("stats").style.display = "none";
+      document.getElementById("resultText").textContent = "Выберите ответы и нажмите «Проверить результат».";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    renderQuiz();
+  </script>
+</body>
+</html>
